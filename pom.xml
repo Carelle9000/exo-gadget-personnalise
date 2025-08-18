@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.exoplatform.addons</groupId>
+        <artifactId>addons-exo-parent-pom</artifactId>
+        <version>17-M02</version>
+        <relativePath></relativePath>
+    </parent>
+
+    <groupId>org.exo.gadget</groupId>
+    <artifactId>gadget-personnalise</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>services</module>
+        <module>webapp</module>
+    </modules>
+
+    <name>gadget-personnalise</name>
+    <url>http://www.example.com</url>
+
+    <properties>
+        <org.exoplatform.commons-exo.version>7.0.0</org.exoplatform.commons-exo.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.exoplatform.commons-exo</groupId>
+                <artifactId>commons-exo</artifactId>
+                <version>${org.exoplatform.commons-exo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>exo-public</id>
+            <url>https://repository.exoplatform.org/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled> <!-- Activer pour versions milestone/snapshot comme 17-M02 -->
+            </snapshots>
+        </repository>
+    </repositories>
+
+</project>
