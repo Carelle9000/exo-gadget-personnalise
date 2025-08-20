@@ -4,6 +4,8 @@ import org.exo.gadget.api.DocumentService;
 import org.exo.gadget.api.QuoteService;
 import org.exo.gadget.api.WeatherService;
 import org.exo.gadget.model.GadgetData;
+import org.exo.gadget.model.Quote;
+import org.exo.gadget.model.WeatherData;
 import org.exoplatform.services.security.ConversationState;
 
 import javax.inject.Inject;

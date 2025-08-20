@@ -1,17 +1,17 @@
 package org.exo.gadget.model;
 
 public class Document {
-    private String name;
-    private String lastModified;
+    private String title;
+    private String date;
 
-    public Document(String name, String lastModified) {
-        this.name = name;
-        this.lastModified = lastModified;
+    public Document(String title, String date) {
+        this.title = title;
+        this.date = date;
     }
 
-    // Getters/Setters
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getLastModified() { return lastModified; }
-    public void setLastModified(String lastModified) { this.lastModified = lastModified; }
+    // Getters et Setters
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
 }
