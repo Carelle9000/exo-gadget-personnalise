@@ -8,17 +8,20 @@ import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exo.gadget.model.Document;
 
-import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DocumentServiceImpl implements DocumentService {
-    @Inject
-    private ActivityManager activityManager;
-    @Inject
-    private IdentityManager identityManager;
+    private final ActivityManager activityManager;
+    private final IdentityManager identityManager;
+
+    // Constructeur pour l'injection des dépendances
+    public DocumentServiceImpl(ActivityManager activityManager, IdentityManager identityManager) {
+        this.activityManager = activityManager;
+        this.identityManager = identityManager;
+    }
 
     @Override
     public List<Document> getRecentDocuments(String username) {
@@ -36,17 +39,16 @@ public class DocumentServiceImpl implements DocumentService {
 
         // Récupérer les activités de l'utilisateur
         List<ExoSocialActivity> activities = activityManager.getActivities(userIdentity);
-        
-        // Filtrer les activités liées aux documents (ajustez selon votre configuration)
+
+        // Filtrer les activités liées aux documents
         return activities.stream()
                 .filter(a -> "CONTENT".equals(a.getType())) // Supposition : type "CONTENT" pour documents
                 .limit(5) // Limiter à 5 documents
                 .map(a -> {
-                    // Accéder au nom du document via templateParams ou autre
-                    String docName = a.getTemplateParams() != null 
-                            ? a.getTemplateParams().getOrDefault("docName", "Document sans titre")
-                            : "Document sans titre";
-                    String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(a.getPostedTime());
+                    // Supposition : utiliser getTitle() ou un champ alternatif
+                    String docName = a.getName() != null ? a.getName(): "Document sans titre";
+                    // Utiliser System.currentTimeMillis() comme fallback
+                    String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
                     return new Document(docName, date);
                 })
                 .collect(Collectors.toList());

@@ -1,6 +1,7 @@
 package org.exo.gadget.api;
 
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
@@ -15,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,16 +31,18 @@ class DocumentServiceImplTest {
     @Mock
     private ConversationState conversationState;
     @Mock
-    private org.exoplatform.social.core.identity.model.Identity userIdentity; // Utiliser Identity de l'API sociale
+    private Identity userIdentity; // org.exoplatform.social.core.identity.model.Identity
+    @Mock
+    private org.exoplatform.services.security.Identity securityIdentity;
     @Mock
     private ExoSocialActivity activity;
-    @InjectMocks
     private DocumentServiceImpl documentService;
 
     @BeforeEach
     void setUp() {
-        // Simuler l'utilisateur connecté
-        org.exoplatform.services.security.Identity securityIdentity = mock(org.exoplatform.services.security.Identity.class);
+        // Initialiser DocumentServiceImpl avec les mocks
+        documentService = new DocumentServiceImpl(activityManager, identityManager);
+        // Configurer ConversationState
         when(securityIdentity.getUserId()).thenReturn("testUser");
         when(conversationState.getIdentity()).thenReturn(securityIdentity);
         ConversationState.setCurrent(conversationState);
@@ -50,11 +52,9 @@ class DocumentServiceImplTest {
     void testGetRecentDocumentsSuccess() {
         // Mock Identity
         when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
-
         // Mock Activity
         when(activity.getType()).thenReturn("CONTENT");
-        when(activity.getPostedTime()).thenReturn(System.currentTimeMillis());
-        when(activity.getTemplateParams()).thenReturn(new HashMap<>() {{ put("docName", "Test Document"); }});
+        when(activity.getName()).thenReturn("Test Document");
         when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
@@ -68,6 +68,7 @@ class DocumentServiceImplTest {
     void testGetRecentDocumentsNoDocs() {
         // Mock Identity
         when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
+        // Mock Activity (liste vide)
         when(activityManager.getActivities(userIdentity)).thenReturn(Collections.emptyList());
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
@@ -77,9 +78,22 @@ class DocumentServiceImplTest {
     }
 
     @Test
+    void testGetRecentDocumentsNoContentActivities() {
+        // Mock Identity
+        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
+        // Mock Activity (type non CONTENT)
+        when(activity.getType()).thenReturn("OTHER");
+        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
+
+        List<Document> documents = documentService.getRecentDocuments("testUser");
+
+        assertNotNull(documents);
+        assertTrue(documents.isEmpty());
+    }
+
+    @Test
     void testGetRecentDocumentsUnauthorized() {
-        // Simuler utilisateur différent
-        org.exoplatform.services.security.Identity securityIdentity = mock(org.exoplatform.services.security.Identity.class);
+        // Simuler un utilisateur différent
         when(securityIdentity.getUserId()).thenReturn("otherUser");
         when(conversationState.getIdentity()).thenReturn(securityIdentity);
         ConversationState.setCurrent(conversationState);
@@ -89,11 +103,28 @@ class DocumentServiceImplTest {
 
     @Test
     void testGetRecentDocumentsNoIdentity() {
+        // Mock Identity (null)
         when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(null);
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
         assertNotNull(documents);
         assertTrue(documents.isEmpty());
+    }
+
+    @Test
+    void testGetRecentDocumentsNullName() {
+        // Mock Identity
+        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
+        // Mock Activity (name null)
+        when(activity.getType()).thenReturn("CONTENT");
+        when(activity.getName()).thenReturn(null);
+        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
+
+        List<Document> documents = documentService.getRecentDocuments("testUser");
+
+        assertNotNull(documents);
+        assertEquals(1, documents.size());
+        assertEquals("Document sans titre", documents.get(0).getTitle());
     }
 }
