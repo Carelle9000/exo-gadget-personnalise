@@ -1,0 +1,15 @@
+<configuration>
+    <component>
+        <key>org.exo.gadget.api.DocumentService</key>
+        <type>org.exo.gadget.api.DocumentServiceImpl</type>
+        <init-params>
+            <object-param>
+                <name>constructor.params</name>
+                <object type="org.exo.gadget.api.DocumentServiceImpl">
+                    <field name="activityManager"><object type="org.exoplatform.social.core.manager.ActivityManager"/></field>
+                    <field name="identityManager"><object type="org.exoplatform.social.core.manager.IdentityManager"/></field>
+                </object>
+            </object-param>
+        </init-params>
+    </component>
+</configuration>
