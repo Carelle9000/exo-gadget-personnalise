@@ -1,7 +1,7 @@
 package org.exo.gadget.api;
 
 import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
+import org.exoplatform.social.common.RealtimeListAccess;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
@@ -11,16 +11,18 @@ import org.exo.gadget.model.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import org.mockito.quality.Strictness;
+import  org.mockito.junit.jupiter.MockitoSettings;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class DocumentServiceImplTest {
 
@@ -48,28 +50,42 @@ class DocumentServiceImplTest {
         ConversationState.setCurrent(conversationState);
     }
 
+
+
     @Test
     void testGetRecentDocumentsSuccess() {
         // Mock Identity
-        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
+        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
         // Mock Activity
         when(activity.getType()).thenReturn("CONTENT");
-        when(activity.getName()).thenReturn("Test Document");
-        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
+        when(activity.getTitle()).thenReturn("Test Document"); // Changement de getName à getTitle
+        when(activity.getPostedTime()).thenReturn(1697059200000L); // Timestamp pour 2023-10-12 00:00:00
+        when(activityManager.getActivitiesWithListAccess(userIdentity))
+                .thenReturn(mock(RealtimeListAccess.class));
+        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
+                .thenReturn(Collections.singletonList(activity));
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
+        // Verify mock interactions
+        verify(identityManager).getIdentity("testUser", true);
+        verify(activityManager).getActivitiesWithListAccess(userIdentity);
+        verify(activity).getType();
+        verify(activity).getTitle();
+
         assertNotNull(documents);
-        assertEquals(1, documents.size());
-        assertEquals("Test Document", documents.get(0).getTitle());
+        assertThat(documents).hasSize(1);
+        assertThat(documents).extracting(Document::getTitle).containsExactly("Test Document");
+        assertThat(documents).extracting(Document::getDate).containsExactly("2023-10-12 00:00:00");
     }
 
     @Test
     void testGetRecentDocumentsNoDocs() {
-        // Mock Identity
-        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
-        // Mock Activity (liste vide)
-        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.emptyList());
+        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
+        when(activityManager.getActivitiesWithListAccess(userIdentity))
+                .thenReturn(mock(RealtimeListAccess.class));
+        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
+                .thenReturn(Collections.emptyList());
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
@@ -79,11 +95,12 @@ class DocumentServiceImplTest {
 
     @Test
     void testGetRecentDocumentsNoContentActivities() {
-        // Mock Identity
-        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
-        // Mock Activity (type non CONTENT)
+        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
         when(activity.getType()).thenReturn("OTHER");
-        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
+        when(activityManager.getActivitiesWithListAccess(userIdentity))
+                .thenReturn(mock(RealtimeListAccess.class));
+        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
+                .thenReturn(Collections.singletonList(activity));
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
@@ -103,8 +120,7 @@ class DocumentServiceImplTest {
 
     @Test
     void testGetRecentDocumentsNoIdentity() {
-        // Mock Identity (null)
-        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(null);
+        when(identityManager.getIdentity("testUser", true)).thenReturn(null);
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
@@ -114,17 +130,20 @@ class DocumentServiceImplTest {
 
     @Test
     void testGetRecentDocumentsNullName() {
-        // Mock Identity
-        when(identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, "testUser")).thenReturn(userIdentity);
-        // Mock Activity (name null)
+        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
         when(activity.getType()).thenReturn("CONTENT");
-        when(activity.getName()).thenReturn(null);
-        when(activityManager.getActivities(userIdentity)).thenReturn(Collections.singletonList(activity));
+        when(activity.getTitle()).thenReturn(null);
+        when(activity.getPostedTime()).thenReturn(1697059200000L); // 2023-10-12 00:00:00 UTC
+        when(activityManager.getActivitiesWithListAccess(userIdentity))
+                .thenReturn(mock(RealtimeListAccess.class));
+        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
+                .thenReturn(Collections.singletonList(activity));
 
         List<Document> documents = documentService.getRecentDocuments("testUser");
 
         assertNotNull(documents);
         assertEquals(1, documents.size());
         assertEquals("Document sans titre", documents.get(0).getTitle());
+        assertEquals("2023-10-12 00:00:00", documents.get(0).getDate());
     }
 }

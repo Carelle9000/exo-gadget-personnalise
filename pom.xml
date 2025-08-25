@@ -11,8 +11,9 @@
         <relativePath></relativePath>
     </parent>
 
+
     <groupId>org.exo.gadget</groupId>
-    <artifactId>gadget-personnalise</artifactId>
+    <artifactId>exo-gadget-perso</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
@@ -22,7 +23,7 @@
         <module>webapp</module>
     </modules>
 
-    <name>gadget-personnalise</name>
+    <name>exo-gadget-perso</name>
     <url>http://www.example.com</url>
 
     <properties>
@@ -51,6 +52,7 @@
                 <enabled>true</enabled> <!-- Activer pour versions milestone/snapshot comme 17-M02 -->
             </snapshots>
         </repository>
+
     </repositories>
 
 </project>

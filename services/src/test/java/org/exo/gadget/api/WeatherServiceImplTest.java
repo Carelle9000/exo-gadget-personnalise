@@ -126,4 +126,12 @@ class WeatherServiceImplTest {
             assertEquals("2.3522", result.getLongitude());
         }
     }
+
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
+
+    public void setMapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 }

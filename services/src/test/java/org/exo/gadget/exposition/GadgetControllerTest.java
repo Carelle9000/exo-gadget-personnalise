@@ -62,7 +62,7 @@ class GadgetControllerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
-        assertTrue(response.getEntity() instanceof GadgetData);
+        assertInstanceOf(GadgetData.class, response.getEntity());
         GadgetData data = (GadgetData) response.getEntity();
         assertEquals("Bienvenue, testUser!", data.getWelcome());
         assertEquals(weatherData, data.getWeather());
@@ -93,7 +93,7 @@ class GadgetControllerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
-        assertTrue(response.getEntity() instanceof GadgetData);
+        assertInstanceOf(GadgetData.class, response.getEntity());
         GadgetData data = (GadgetData) response.getEntity();
         assertEquals("Bienvenue, testUser!", data.getWelcome());
         assertNull(data.getWeather());
@@ -112,7 +112,7 @@ class GadgetControllerTest {
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertNotNull(response.getEntity());
-        assertTrue(response.getEntity() instanceof GadgetData);
+        assertInstanceOf(GadgetData.class, response.getEntity());
         GadgetData data = (GadgetData) response.getEntity();
         assertEquals("Bienvenue, testUser!", data.getWelcome());
         assertNotNull(data.getWeather());

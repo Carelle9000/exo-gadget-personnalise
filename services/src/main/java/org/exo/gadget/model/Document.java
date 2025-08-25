@@ -1,6 +1,13 @@
 package org.exo.gadget.model;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Document {
+    // Getters et Setters
     private String title;
     private String date;
 
@@ -9,9 +16,5 @@ public class Document {
         this.date = date;
     }
 
-    // Getters et Setters
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+
 }

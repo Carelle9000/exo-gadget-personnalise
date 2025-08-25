@@ -44,6 +44,7 @@
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>exo.kernel.commons</artifactId>
 			<version>7.0.0-exo-M24</version>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
@@ -57,6 +58,7 @@
 			<artifactId>exo.social.component.core</artifactId>
 			<version>1.2.9</version>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.portlet</groupId>
 			<artifactId>portlet-api</artifactId>
@@ -88,14 +90,27 @@
 		</dependency>
 
 
+
 		<dependency>
 			<groupId>org.exoplatform.social</groupId>
 			<artifactId>social-component-core</artifactId>
 			<version>7.0.0-exo-M24</version>
-
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.shindig</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>org.apache.shindig</groupId>
+            <artifactId>shindig-social-api</artifactId>
+            <version>2.5.2</version>
+        </dependency>
+
+
+        <dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.11.0</version>
@@ -104,25 +119,54 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.10.0</version>
+			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
-
+        <!-- JUnit 5 (Jupiter) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>5.5.0</version>
+			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>5.5.0</version>
+			<version>5.11.0</version>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
 
-	<build>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.26.0</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>exo-public</id>
+            <url>https://repository.exoplatform.org/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled> <!-- Activer pour versions milestone/snapshot comme 17-M02 -->
+            </snapshots>
+        </repository>
+
+    </repositories>
+
+
+    <build>
+        <finalName>exo-gadget-perso</finalName>
 		<pluginManagement>
 			<!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
 			<plugins>
@@ -164,6 +208,10 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>3.2.5</version>
+                    <configuration>
+                        <useModulePath>false</useModulePath>
+                        <argLine>-XX:+EnableDynamicAgentLoading</argLine>
+                    </configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -188,5 +236,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-	</build>
+
+    </build>
 </project>

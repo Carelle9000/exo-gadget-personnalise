@@ -3,25 +3,19 @@ package org.exo.gadget.api;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exo.gadget.model.Document;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.TimeZone;
+import java.util.logging.Logger;
 
-public class DocumentServiceImpl implements DocumentService {
-    private final ActivityManager activityManager;
-    private final IdentityManager identityManager;
-
-    // Constructeur pour l'injection des dépendances
-    public DocumentServiceImpl(ActivityManager activityManager, IdentityManager identityManager) {
-        this.activityManager = activityManager;
-        this.identityManager = identityManager;
-    }
+public record DocumentServiceImpl(ActivityManager activityManager,
+                                  IdentityManager identityManager) implements DocumentService {
 
     @Override
     public List<Document> getRecentDocuments(String username) {
@@ -32,25 +26,32 @@ public class DocumentServiceImpl implements DocumentService {
         }
 
         // Obtenir l'Identity de l'utilisateur
-        Identity userIdentity = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, username);
+        Identity userIdentity = identityManager.getIdentity(username, true);
         if (userIdentity == null) {
             return Collections.emptyList();
         }
 
-        // Récupérer les activités de l'utilisateur
-        List<ExoSocialActivity> activities = activityManager.getActivities(userIdentity);
+        // Récupérer les activités de l'utilisateur avec pagination
+        List<ExoSocialActivity> activities = activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20);
+        if (!activities.isEmpty()) {
+            Logger.getLogger(DocumentServiceImpl.class.getName()).info("Methods: " + Arrays.toString(activities.get(0).getClass().getMethods()));
+        }
+
+        // Formater la date en UTC
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         // Filtrer les activités liées aux documents
         return activities.stream()
-                .filter(a -> "CONTENT".equals(a.getType())) // Supposition : type "CONTENT" pour documents
-                .limit(5) // Limiter à 5 documents
+                .filter(a -> "CONTENT".equals(a.getType()))
+                .limit(5)
                 .map(a -> {
-                    // Supposition : utiliser getTitle() ou un champ alternatif
-                    String docName = a.getName() != null ? a.getName(): "Document sans titre";
-                    // Utiliser System.currentTimeMillis() comme fallback
-                    String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
+                    String docName = a.getTitle() != null ? a.getTitle() : "Document sans titre";
+                    String date = a.getPostedTime() != null
+                            ? sdf.format(a.getPostedTime())
+                            : sdf.format(System.currentTimeMillis());
                     return new Document(docName, date);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -1,0 +1,12 @@
+org/exo/gadget/model/Quote.class
+org/exo/gadget/api/DocumentService.class
+org/exo/gadget/api/QuoteService.class
+org/exo/gadget/api/DocumentServiceImpl.class
+org/exo/gadget/util/Constants.class
+org/exo/gadget/api/WeatherService.class
+org/exo/gadget/model/Document.class
+org/exo/gadget/api/WeatherServiceImpl.class
+org/exo/gadget/exposition/GadgetController.class
+org/exo/gadget/model/GadgetData.class
+org/exo/gadget/model/WeatherData.class
+org/exo/gadget/api/QuoteServiceImpl.class

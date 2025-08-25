@@ -1,3 +1,6 @@
+# -----------------------------------
+# docker-compose.yml (exécution des services)
+# -----------------------------------
 services:
   mysql:
     image: mysql:8.0
@@ -43,7 +46,9 @@ services:
       - exo-net
 
   exo:
-    image: exoplatform/exo-community:7.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: exo_platform
     restart: always
     depends_on:
@@ -69,6 +74,8 @@ services:
     volumes:
       - exo_data:/srv/exo
       - exo_logs:/var/log/exo
+      - ./alfresco-extension-services.jar:/opt/exo/lib/alfresco-extension-services.jar
+      - ./alfresco-extension-webapp.war:/opt/exo/webapps/alfresco-extension-webapp.war
     networks:
       - exo-net
 

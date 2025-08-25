@@ -7,6 +7,11 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="exo-snapshots" />
+      <option name="name" value="exo-snapshots" />
+      <option name="url" value="https://repository.exoplatform.org/public-snapshots" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="repository.exoplatform.org" />
       <option name="name" value="repository.exoplatform.org" />
       <option name="url" value="https://repository.exoplatform.org/public" />
