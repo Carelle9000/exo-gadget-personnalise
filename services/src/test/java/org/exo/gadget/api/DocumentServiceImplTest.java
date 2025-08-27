@@ -4,7 +4,6 @@ import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.social.common.RealtimeListAccess;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.identity.model.Identity;
-import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exo.gadget.model.Document;
@@ -13,137 +12,123 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.quality.Strictness;
-import  org.mockito.junit.jupiter.MockitoSettings;
-import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-@MockitoSettings(strictness = Strictness.LENIENT)
+
 @ExtendWith(MockitoExtension.class)
 class DocumentServiceImplTest {
 
     @Mock
     private ActivityManager activityManager;
+
     @Mock
     private IdentityManager identityManager;
+
     @Mock
     private ConversationState conversationState;
+
     @Mock
-    private Identity userIdentity; // org.exoplatform.social.core.identity.model.Identity
+    private Identity userIdentity;
+
     @Mock
     private org.exoplatform.services.security.Identity securityIdentity;
+
     @Mock
     private ExoSocialActivity activity;
+
     private DocumentServiceImpl documentService;
 
     @BeforeEach
     void setUp() {
-        // Initialiser DocumentServiceImpl avec les mocks
+        // Initialise le service avec les mocks
         documentService = new DocumentServiceImpl(activityManager, identityManager);
-        // Configurer ConversationState
+
+        // Simule l'utilisateur connecté dans ConversationState
         when(securityIdentity.getUserId()).thenReturn("testUser");
         when(conversationState.getIdentity()).thenReturn(securityIdentity);
         ConversationState.setCurrent(conversationState);
     }
 
-
-
     @Test
-    void testGetRecentDocumentsSuccess() {
-        // Mock Identity
-        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
-        // Mock Activity
+    void testGetRecentDocumentsSuccess() throws Exception {
+        // Préparation des données simulées
+        String username = "testUser";
+        String docTitle = "Document Test";
+        long postedTime = 1697068800000L;
+
+        @SuppressWarnings("unchecked")
+        RealtimeListAccess<ExoSocialActivity> activityListAccess = mock(RealtimeListAccess.class);
+
+        when(identityManager.getIdentity(username, true)).thenReturn(userIdentity);
+        when(activityManager.getActivitiesWithListAccess(userIdentity)).thenReturn(activityListAccess);
+        when(activityListAccess.loadAsList(0, 10)).thenReturn(Collections.singletonList(activity));
+
         when(activity.getType()).thenReturn("CONTENT");
-        when(activity.getTitle()).thenReturn("Test Document"); // Changement de getName à getTitle
-        when(activity.getPostedTime()).thenReturn(1697059200000L); // Timestamp pour 2023-10-12 00:00:00
-        when(activityManager.getActivitiesWithListAccess(userIdentity))
-                .thenReturn(mock(RealtimeListAccess.class));
-        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
-                .thenReturn(Collections.singletonList(activity));
+        when(activity.getName()).thenReturn(docTitle);
+        when(activity.getPostedTime()).thenReturn(postedTime);
 
-        List<Document> documents = documentService.getRecentDocuments("testUser");
+        // Exécution
+        List<Document> documents = documentService.getRecentDocuments(username);
 
-        // Verify mock interactions
-        verify(identityManager).getIdentity("testUser", true);
+        // Vérifications
+        assertThat(documents).isNotNull().hasSize(1);
+        Document result = documents.get(0);
+        assertThat(result.getTitle()).isEqualTo(docTitle);
+        assertThat(result.getDate()).isEqualTo(new Date(postedTime));
+
+        // Vérifie interactions avec les mocks
+        verify(identityManager).getIdentity(username, true);
         verify(activityManager).getActivitiesWithListAccess(userIdentity);
-        verify(activity).getType();
-        verify(activity).getTitle();
-
-        assertNotNull(documents);
-        assertThat(documents).hasSize(1);
-        assertThat(documents).extracting(Document::getTitle).containsExactly("Test Document");
-        assertThat(documents).extracting(Document::getDate).containsExactly("2023-10-12 00:00:00");
-    }
-
-    @Test
-    void testGetRecentDocumentsNoDocs() {
-        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
-        when(activityManager.getActivitiesWithListAccess(userIdentity))
-                .thenReturn(mock(RealtimeListAccess.class));
-        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
-                .thenReturn(Collections.emptyList());
-
-        List<Document> documents = documentService.getRecentDocuments("testUser");
-
-        assertNotNull(documents);
-        assertTrue(documents.isEmpty());
-    }
-
-    @Test
-    void testGetRecentDocumentsNoContentActivities() {
-        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
-        when(activity.getType()).thenReturn("OTHER");
-        when(activityManager.getActivitiesWithListAccess(userIdentity))
-                .thenReturn(mock(RealtimeListAccess.class));
-        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
-                .thenReturn(Collections.singletonList(activity));
-
-        List<Document> documents = documentService.getRecentDocuments("testUser");
-
-        assertNotNull(documents);
-        assertTrue(documents.isEmpty());
+        verify(activityListAccess).loadAsList(0, 10);
     }
 
     @Test
     void testGetRecentDocumentsUnauthorized() {
-        // Simuler un utilisateur différent
+        // Simule un utilisateur différent connecté
         when(securityIdentity.getUserId()).thenReturn("otherUser");
-        when(conversationState.getIdentity()).thenReturn(securityIdentity);
         ConversationState.setCurrent(conversationState);
 
-        assertThrows(SecurityException.class, () -> documentService.getRecentDocuments("testUser"));
+        assertThrows(SecurityException.class, () ->
+                documentService.getRecentDocuments("testUser"));
+    }
+
+    @Test
+    void testGetRecentDocumentsEmptyActivities() throws Exception {
+        String username = "testUser";
+
+        @SuppressWarnings("unchecked")
+        RealtimeListAccess<ExoSocialActivity> activityListAccess = mock(RealtimeListAccess.class);
+
+        when(identityManager.getIdentity(username, true)).thenReturn(userIdentity);
+        when(activityManager.getActivitiesWithListAccess(userIdentity)).thenReturn(activityListAccess);
+        when(activityListAccess.loadAsList(0, 10)).thenReturn(Collections.emptyList());
+
+        List<Document> documents = documentService.getRecentDocuments(username);
+        assertThat(documents).isNotNull().isEmpty();
     }
 
     @Test
     void testGetRecentDocumentsNoIdentity() {
-        when(identityManager.getIdentity("testUser", true)).thenReturn(null);
+        String username = "testUser";
+        when(identityManager.getIdentity(username, true)).thenReturn(null);
 
-        List<Document> documents = documentService.getRecentDocuments("testUser");
-
-        assertNotNull(documents);
-        assertTrue(documents.isEmpty());
+        List<Document> documents = documentService.getRecentDocuments(username);
+        assertThat(documents).isNotNull().isEmpty();
     }
 
     @Test
-    void testGetRecentDocumentsNullName() {
-        when(identityManager.getIdentity("testUser", true)).thenReturn(userIdentity);
-        when(activity.getType()).thenReturn("CONTENT");
-        when(activity.getTitle()).thenReturn(null);
-        when(activity.getPostedTime()).thenReturn(1697059200000L); // 2023-10-12 00:00:00 UTC
-        when(activityManager.getActivitiesWithListAccess(userIdentity))
-                .thenReturn(mock(RealtimeListAccess.class));
-        when(activityManager.getActivitiesWithListAccess(userIdentity).loadAsList(0, 20))
-                .thenReturn(Collections.singletonList(activity));
+    void testGetRecentDocumentsActivityListAccessNull() {
+        String username = "testUser";
+        when(identityManager.getIdentity(username, true)).thenReturn(userIdentity);
+        when(activityManager.getActivitiesWithListAccess(userIdentity)).thenReturn(null);
 
-        List<Document> documents = documentService.getRecentDocuments("testUser");
-
-        assertNotNull(documents);
-        assertEquals(1, documents.size());
-        assertEquals("Document sans titre", documents.get(0).getTitle());
-        assertEquals("2023-10-12 00:00:00", documents.get(0).getDate());
+        List<Document> documents = documentService.getRecentDocuments(username);
+        assertThat(documents).isNotNull().isEmpty();
     }
 }

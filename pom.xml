@@ -1,58 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!-- Déclaration du projet Maven et du schéma XML -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Version du modèle POM -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Définition du POM parent : il apporte une configuration commune -->
     <parent>
         <groupId>org.exoplatform.addons</groupId>
         <artifactId>addons-exo-parent-pom</artifactId>
-        <version>17-M02</version>
-        <relativePath></relativePath>
+        <version>17-M02</version> <!-- Version du parent (ici milestone M02) -->
     </parent>
 
+    <!-- Identité du projet -->
+    <groupId>org.exo.gadget</groupId>  <!-- Nom de ton organisation ou domaine -->
+    <artifactId>exo-gadget-perso</artifactId> <!-- Nom unique du projet -->
+    <version>1.0-SNAPSHOT</version> <!-- Version en cours de développement -->
 
-    <groupId>org.exo.gadget</groupId>
-    <artifactId>exo-gadget-perso</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
+    <!-- Type de packaging : ici "pom" car ce projet est un projet parent multi-modules -->
     <packaging>pom</packaging>
 
+    <!-- Déclaration des modules enfants qui héritent de ce POM -->
     <modules>
-        <module>services</module>
-        <module>webapp</module>
+        <module>services</module> <!-- Module backend contenant la logique métier -->
+        <module>webapp</module>   <!-- Module web (interface utilisateur) -->
     </modules>
 
+    <!-- Informations supplémentaires -->
     <name>exo-gadget-perso</name>
-    <url>http://www.example.com</url>
+    <url>http://www.example.com</url> <!-- URL du projet (optionnel) -->
 
+    <!-- Déclaration des propriétés pour centraliser les versions -->
     <properties>
+        <!-- Version utilisée pour les dépendances liées à ExoPlatform -->
         <org.exoplatform.commons-exo.version>7.0.0</org.exoplatform.commons-exo.version>
     </properties>
+
+    <!-- Section pour gérer les versions communes des dépendances -->
     <dependencyManagement>
         <dependencies>
+            <!-- Dépendance BOM (Bill Of Materials) pour ExoPlatform -->
             <dependency>
                 <groupId>org.exoplatform.commons-exo</groupId>
                 <artifactId>commons-exo</artifactId>
                 <version>${org.exoplatform.commons-exo.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <type>pom</type>  <!-- Indique qu’il s’agit d’un POM, pas d’un JAR -->
+                <scope>import</scope> <!-- Permet d’importer les versions définies -->
             </dependency>
         </dependencies>
     </dependencyManagement>
 
+    <!-- Définition des dépôts Maven où récupérer les dépendances -->
     <repositories>
         <repository>
             <id>exo-public</id>
             <url>https://repository.exoplatform.org/public</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>true</enabled> <!-- Activer le téléchargement des versions stables -->
             </releases>
             <snapshots>
-                <enabled>true</enabled> <!-- Activer pour versions milestone/snapshot comme 17-M02 -->
+                <enabled>true</enabled> <!-- Activer pour les versions SNAPSHOT ou milestone -->
             </snapshots>
         </repository>
-
     </repositories>
 
 </project>

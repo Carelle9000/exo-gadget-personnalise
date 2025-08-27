@@ -1,55 +1,57 @@
 package org.exo.gadget.api;
 
+import org.exo.gadget.client.WeatherApiClient;
 import org.exo.gadget.model.WeatherData;
-import org.exo.gadget.util.Constants;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+/**
+ * Implémentation de l'interface WeatherService
+ * --------------------------------------------
+ * Cette classe est responsable de la logique métier pour récupérer
+ * et interpréter les données météo.
+ * <p>
+ * Elle utilise WeatherApiClient pour appeler l'API externe OpenWeatherMap.
+ */
+public record WeatherServiceImpl(WeatherApiClient weatherApiClient) implements WeatherService {
 
-public class WeatherServiceImpl implements WeatherService {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    /**
+     * Injection de WeatherApiClient (permet de faciliter les tests unitaires)
+     *
+     * @param weatherApiClient client HTTP pour consommer l'API OpenWeatherMap
+     */
+    public WeatherServiceImpl {
+    }
 
+    /**
+     * Récupère les informations météo pour une latitude et longitude données.
+     *
+     * @param latitude  la latitude
+     * @param longitude la longitude
+     * @return un objet WeatherData contenant la température et la description
+     * @throws Exception si un problème survient lors de l'appel API ou du parsing
+     */
     @Override
-    public WeatherData getWeather(String ipAddress) {
-        try {
-            // Étape 1: Geo par IP (utiliser API gratuite comme ipapi.co)
-            URL geoUrl = new URL("https://ipapi.co/" + ipAddress + "/json/");
-            HttpURLConnection geoConn = (HttpURLConnection) geoUrl.openConnection();
-            geoConn.setRequestMethod("GET");
-            BufferedReader geoIn = new BufferedReader(new InputStreamReader(geoConn.getInputStream()));
-            JsonNode geoJson = mapper.readTree(geoIn.readLine());
-            String lat = geoJson.get("latitude").asText();
-            String lon = geoJson.get("longitude").asText();
+    public WeatherData getWeather(String latitude, String longitude) throws Exception {
+        // 1. Appel à l'API via WeatherApiClient
+        String jsonResponse = weatherApiClient.fetchWeatherData(latitude, longitude);
 
-            // Appeler la méthode avec coordonnées
-            return getWeather(Double.parseDouble(lat), Double.parseDouble(lon));
-        } catch (Exception e) {
-            // Gérer erreur, retourner défaut
-            return new WeatherData();
-        }
+        // 2. Parser la réponse JSON
+        JSONObject json = new JSONObject(jsonResponse);
+
+        double temperature = json.getJSONObject("main").getDouble("temp");
+        String description = json.getJSONArray("weather").getJSONObject(0).getString("description");
+
+        // 3. Retourner l'objet métier
+        return new WeatherData(temperature, description);
     }
 
     @Override
-    public WeatherData getWeather(double lat, double lon) {
-        try {
-            // Étape 2: Météo
-            URL weatherUrl = new URL("https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + Constants.OPENWEATHER_API_KEY + "&units=metric");
-            HttpURLConnection weatherConn = (HttpURLConnection) weatherUrl.openConnection();
-            weatherConn.setRequestMethod("GET");
-            BufferedReader weatherIn = new BufferedReader(new InputStreamReader(weatherConn.getInputStream()));
-            JsonNode weatherJson = mapper.readTree(weatherIn.readLine());
+    public WeatherData getWeatherByCoordinates(String latitude, String longitude) {
+        return null;
+    }
 
-            WeatherData data = new WeatherData(String.valueOf(lat), String.valueOf(lon));
-            data.setTemperature(weatherJson.get("main").get("temp").asDouble());
-            data.setDescription(weatherJson.get("weather").get(0).get("description").asText());
-            return data;
-        } catch (Exception e) {
-            // Gérer erreur, retourner défaut
-            return new WeatherData(String.valueOf(lat), String.valueOf(lon));
-        }
+    @Override
+    public WeatherData getWeather() {
+        return null;
     }
 }

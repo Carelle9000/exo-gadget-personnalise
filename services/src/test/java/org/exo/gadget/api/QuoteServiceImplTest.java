@@ -1,11 +1,6 @@
 package org.exo.gadget.api;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.exo.gadget.client.QuoteApiClient;
 import org.exo.gadget.model.Quote;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,102 +9,66 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Test unitaire pour QuoteServiceImpl
+ * -----------------------------------
+ * Ici, on simule le comportement de QuoteApiClient pour éviter les appels réseau réels.
+ */
 @ExtendWith(MockitoExtension.class)
 class QuoteServiceImplTest {
 
     @Mock
-    private CloseableHttpClient httpClient;
-    @Mock
-    private CloseableHttpResponse httpResponse;
-    @Mock
-    private HttpEntity httpEntity;
-    @Mock
-    private StatusLine statusLine;
+    private QuoteApiClient quoteApiClient; // mock du client API
+
     @InjectMocks
-    private QuoteServiceImpl quoteService;
+    private QuoteServiceImpl quoteService; // service à tester
+
+    private Quote sampleQuote;
 
     @BeforeEach
     void setUp() {
-        quoteService = new QuoteServiceImpl(httpClient);
+        // Citation exemple utilisée pour les tests
+        sampleQuote = new Quote("Stay positive", "Anonymous");
     }
 
-
+    /**
+     * Test du scénario de succès : QuoteApiClient renvoie une citation valide
+     */
     @Test
     void testGetDailyQuoteSuccess() throws Exception {
-        String jsonResponse = "[{\"content\":\"Stay positive\",\"author\":\"Anonymous\"}]";
+        // Simulation du comportement du mock
+        when(quoteApiClient.fetchQuote()).thenReturn(sampleQuote);
 
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(jsonResponse.getBytes()));
+        // Appel de la méthode testée
+        Quote result = quoteService.getDailyQuote();
 
-        Quote quote = quoteService.getDailyQuote();
+        // Vérifications
+        assertNotNull(result);
+        assertEquals("Stay positive", result.getContent());
+        assertEquals("Anonymous", result.getAuthor());
 
-        assertEquals("Stay positive", quote.getContent());
-        assertEquals("Anonymous", quote.getAuthor());
-        verify(httpClient).execute(any(HttpGet.class));
+        // Vérifie que le mock a été appelé exactement une fois
+        verify(quoteApiClient, times(1)).fetchQuote();
     }
 
-
+    /**
+     * Test du scénario où QuoteApiClient lance une exception (erreur réseau)
+     */
     @Test
-    void testGetDailyQuoteIOException() throws IOException {
-        when(httpClient.execute(any(HttpUriRequest.class))).thenThrow(new IOException("Network error"));
+    void testGetDailyQuoteThrowsException() throws Exception {
+        // Simulation d'une exception
+        when(quoteApiClient.fetchQuote()).thenThrow(new RuntimeException("Network error"));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> quoteService.getDailyQuote());
-        assertEquals("Erreur citation", exception.getMessage());
-        assertInstanceOf(IOException.class, exception.getCause());
-        verify(httpClient).execute(any(HttpUriRequest.class));
-    }
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> quoteService.getDailyQuote());
 
-    @Test
-    void testGetDailyQuoteInvalidJson() throws Exception {
-        String invalidJson = "not a json";
+        assertEquals("Erreur récupération citation", exception.getMessage());
+        assertNotNull(exception.getCause());
+        assertEquals("Network error", exception.getCause().getMessage());
 
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(invalidJson.getBytes()));
-
-        assertThrows(RuntimeException.class, () -> quoteService.getDailyQuote());
-    }
-
-    @Test
-    void testGetDailyQuoteEmptyArray() throws Exception {
-        // JSON simulé vide
-        String jsonResponse = "[]";
-
-        // Stubs nécessaires
-        when(httpClient.execute(any(HttpGet.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(jsonResponse.getBytes()));
-
-        // Exécution + Assertion
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> quoteService.getDailyQuote());
-        assertEquals("Erreur citation", exception.getMessage());
-
-        verify(httpClient).execute(any(HttpGet.class));
-    }
-
-
-
-    @Test
-    void testGetDailyQuoteMissingFields() throws IOException {
-        String json = "[{\"otherField\":\"value\"}]";
-        InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-
-        when(httpClient.execute(any(HttpUriRequest.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(stream);
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> quoteService.getDailyQuote());
-        assertEquals("Erreur citation", exception.getMessage());
-        verify(httpClient).execute(any(HttpUriRequest.class));
-        verify(httpResponse).close();
+        verify(quoteApiClient, times(1)).fetchQuote();
     }
 }

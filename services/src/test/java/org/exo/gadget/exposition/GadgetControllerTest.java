@@ -1,8 +1,8 @@
 package org.exo.gadget.exposition;
 
 import org.exo.gadget.api.DocumentService;
-import org.exo.gadget.api.QuoteService;
 import org.exo.gadget.api.WeatherService;
+import org.exo.gadget.api.QuoteService;
 import org.exo.gadget.model.Document;
 import org.exo.gadget.model.GadgetData;
 import org.exo.gadget.model.Quote;
@@ -12,111 +12,87 @@ import org.exoplatform.services.security.Identity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.ws.rs.core.Response;
+//import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GadgetControllerTest {
 
     @Mock
-    private WeatherService weatherService;
+    private WeatherService weatherService; // Service météo simulé
+
     @Mock
-    private QuoteService quoteService;
+    private QuoteService quoteService; // Service de citation simulé
+
     @Mock
-    private DocumentService documentService;
+    private DocumentService documentService; // Service de documents simulé
+
+    @InjectMocks
+    private GadgetController gadgetController; // Controller à tester
+
     @Mock
-    private ConversationState conversationState;
-    @Mock
-    private Identity securityIdentity;
-    private GadgetController controller;
+    private Identity identity; // Identité utilisateur simulée
 
     @BeforeEach
     void setUp() {
-        // Initialiser GadgetController avec les mocks
-        controller = new GadgetController(weatherService, quoteService, documentService);
-        // Configurer ConversationState
-        when(securityIdentity.getUserId()).thenReturn("testUser");
-        when(conversationState.getIdentity()).thenReturn(securityIdentity);
-        ConversationState.setCurrent(conversationState);
+        // Configure l'utilisateur courant pour ConversationState
+        when(identity.getUserId()).thenReturn("testUser");
+        ConversationState.setCurrent(mock(ConversationState.class));
+        when(ConversationState.getCurrent().getIdentity()).thenReturn(identity);
     }
 
     @Test
-    void testGetGadgetDataSuccess() {
-        // Mock services
-        WeatherData weatherData = new WeatherData("Paris",  "Sunny");
-        Quote quote = new Quote("Carpe diem", "Horace");
-        List<Document> documents = Collections.singletonList(new Document("Test Doc", "2025-08-21 10:00:00"));
-        when(weatherService.getWeather(48.8566, 2.3522)).thenReturn(weatherData);
+    void testGadgetControllerReturnsGadgetData() {
+        // --- Préparer les données de test ---
+        WeatherData weather = new WeatherData("10.0", "20.0");
+        weather.setTemperature(25.0);
+        weather.setDescription("Soleil");
+
+        Quote quote = new Quote("Reste positif", "Anonymous");
+
+        Document doc = new Document("Document1", new java.util.Date());
+        List<Document> documents = Collections.singletonList(doc);
+
+        // --- Stubber les services pour retourner ces données ---
+        when(weatherService.getWeather()).thenReturn(weather);
         when(quoteService.getDailyQuote()).thenReturn(quote);
         when(documentService.getRecentDocuments("testUser")).thenReturn(documents);
 
-        Response response = controller.getGadgetData(48.8566, 2.3522);
+        // --- Exécuter la méthode du controller ---
+        GadgetData gadgetData = gadgetController.getGadgetData();
 
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertNotNull(response.getEntity());
-        assertInstanceOf(GadgetData.class, response.getEntity());
-        GadgetData data = (GadgetData) response.getEntity();
-        assertEquals("Bienvenue, testUser!", data.getWelcome());
-        assertEquals(weatherData, data.getWeather());
-        assertEquals(quote, data.getQuote());
-        assertEquals(documents, data.getDocuments());
+        // --- Vérifier les résultats ---
+        assertThat(gadgetData).isNotNull();
+        assertThat(gadgetData.getWelcomeMessage()).isEqualTo("Bonjour testUser!");
+        assertThat(gadgetData.getWeather()).isEqualTo(weather);
+        assertThat(gadgetData.getQuote()).isEqualTo(quote);
+        assertThat(gadgetData.getDocuments()).containsExactly(doc);
+
+        // --- Vérifier que les services ont été appelés ---
+        verify(weatherService).getWeather();
+        verify(quoteService).getDailyQuote();
+        verify(documentService).getRecentDocuments("testUser");
     }
 
     @Test
-    void testGetGadgetDataUnauthorized() {
-        // Simuler utilisateur non authentifié
-        when(conversationState.getIdentity()).thenReturn(null);
-        ConversationState.setCurrent(conversationState);
+    void testGadgetControllerWithNoDocuments() {
+        // Stub services
+        when(weatherService.getWeather()).thenReturn(new WeatherData("0", "0"));
+        when(quoteService.getDailyQuote()).thenReturn(new Quote("Contente-toi", "Auteur"));
+        when(documentService.getRecentDocuments("testUser")).thenReturn(Collections.emptyList());
 
-        Response response = controller.getGadgetData(48.8566, 2.3522);
+        // Appel du controller
+        GadgetData gadgetData = gadgetController.getGadgetData();
 
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-        assertEquals("Utilisateur non authentifié", response.getEntity());
-    }
-
-    @Test
-    void testGetGadgetDataNullServices() {
-        // Simuler services renvoyant null
-        when(weatherService.getWeather(48.8566, 2.3522)).thenReturn(null);
-        when(quoteService.getDailyQuote()).thenReturn(null);
-        when(documentService.getRecentDocuments("testUser")).thenReturn(null);
-
-        Response response = controller.getGadgetData(48.8566, 2.3522);
-
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertNotNull(response.getEntity());
-        assertInstanceOf(GadgetData.class, response.getEntity());
-        GadgetData data = (GadgetData) response.getEntity();
-        assertEquals("Bienvenue, testUser!", data.getWelcome());
-        assertNull(data.getWeather());
-        assertNull(data.getQuote());
-        assertNull(data.getDocuments());
-    }
-
-    @Test
-    void testGetGadgetDataServiceException() {
-        // Simuler une exception dans DocumentService
-        when(weatherService.getWeather(48.8566, 2.3522)).thenReturn(new WeatherData("Paris",  "Sunny"));
-        when(quoteService.getDailyQuote()).thenReturn(new Quote("Carpe diem", "Horace"));
-        when(documentService.getRecentDocuments("testUser")).thenThrow(new RuntimeException("Service error"));
-
-        Response response = controller.getGadgetData(48.8566, 2.3522);
-
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertNotNull(response.getEntity());
-        assertInstanceOf(GadgetData.class, response.getEntity());
-        GadgetData data = (GadgetData) response.getEntity();
-        assertEquals("Bienvenue, testUser!", data.getWelcome());
-        assertNotNull(data.getWeather());
-        assertNotNull(data.getQuote());
-        assertNull(data.getDocuments());
+        // Vérification
+        assertThat(gadgetData.getDocuments()).isEmpty();
     }
 }

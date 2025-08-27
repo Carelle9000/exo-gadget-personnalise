@@ -4,6 +4,8 @@
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/api/QuoteServiceImpl.java
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/api/WeatherService.java
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/api/WeatherServiceImpl.java
+/home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/client/QuoteApiClient.java
+/home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/client/WeatherApiClient.java
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/exposition/GadgetController.java
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/model/Document.java
 /home/kozao/Documents/kozao/exo-gadget-perso/services/src/main/java/org/exo/gadget/model/GadgetData.java

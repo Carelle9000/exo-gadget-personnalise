@@ -1,155 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.exo.gadget</groupId>
-		<artifactId>gadget-personnalise</artifactId>
-		<version>1.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath> <!-- Ajustez selon la structure -->
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<groupId>org.exoplatform.gadget</groupId>
-	<artifactId>services</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <!-- Version du modèle POM -->
+    <modelVersion>4.0.0</modelVersion>
 
-	<name>services</name>
-	<!-- FIXME change it to the project's website -->
-	<url>http://www.example.com</url>
+    <!-- Référence au projet parent -->
+    <parent>
+        <groupId>org.exo.gadget</groupId>
+        <artifactId>gadget-personnalise</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath> <!-- Chemin relatif vers le parent -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>17</maven.compiler.release>
-	</properties>
+    <!-- Identité du module -->
+    <groupId>org.exoplatform.gadget</groupId>
+    <artifactId>services</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging> <!-- Ce module produit un JAR -->
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>5.11.0</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <name>services</name>
+    <!-- Lien du site projet (à remplacer par un vrai URL si nécessaire) -->
+    <url>http://www.example.com</url>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.exoplatform.ws</groupId>
-			<artifactId>exo.ws.rest.core</artifactId>
-			<version>7.0.0-exo-M24</version>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.kernel</groupId>
-			<artifactId>exo.kernel.commons</artifactId>
-			<version>7.0.0-exo-M24</version>
+    <!-- Propriétés générales -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release> <!-- Compilation en Java 17 -->
+    </properties>
+
+    <!-- Gestion des dépendances BOM pour les tests -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.11.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Liste des dépendances -->
+    <dependencies>
+        <!-- Dépendances eXoPlatform pour REST et le container -->
+        <dependency>
+            <groupId>org.exoplatform.ws</groupId>
+            <artifactId>exo.ws.rest.core</artifactId>
+            <version>7.0.0-exo-M24</version>
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.commons</artifactId>
+            <version>7.0.0-exo-M24</version>
+            <scope>provided</scope> <!-- Déjà fourni par le conteneur -->
+        </dependency>
+        <dependency>
+            <groupId>org.exoplatform.kernel</groupId>
+            <artifactId>exo.kernel.container</artifactId>
+            <version>7.0.0-exo-M24</version>
             <scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.exoplatform.kernel</groupId>
-			<artifactId>exo.kernel.container</artifactId>
-			<version>7.0.0-exo-M24</version>
-			<scope>provided</scope>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.exoplatform.social</groupId>
-			<artifactId>exo.social.component.core</artifactId>
-			<version>1.2.9</version>
-		</dependency>
+        </dependency>
 
-		<dependency>
-			<groupId>javax.portlet</groupId>
-			<artifactId>portlet-api</artifactId>
-			<version>2.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Pour JSON, HTTP -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.17.2</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.annotation</groupId>
-			<artifactId>jsr250-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20231013</version>
-		</dependency>
+        <!-- Dépendances Social (API sociale eXo) -->
+        <dependency>
+            <groupId>org.exoplatform.social</groupId>
+            <artifactId>exo.social.component.core</artifactId>
+            <version>1.2.9</version>
+        </dependency>
 
-		<!-- Apache HttpClient -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.14</version>
-		</dependency>
+        <!-- API Portlet (JSR-286) -->
+        <dependency>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <!-- JSON et HTTP -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
 
+        <!-- Apache HttpClient pour appels HTTP -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.exoplatform.social</groupId>
-			<artifactId>social-component-core</artifactId>
-			<version>7.0.0-exo-M24</version>
+        <!-- Lombok pour réduire le boilerplate (getters/setters, builders, etc.) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.34</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Social component avec exclusion des dépendances Shindig -->
+        <dependency>
+            <groupId>org.exoplatform.social</groupId>
+            <artifactId>social-component-core</artifactId>
+            <version>7.0.0-exo-M24</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.shindig</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
+        </dependency>
 
+        <!-- Dépendance Shindig pour gadgets -->
         <dependency>
             <groupId>org.apache.shindig</groupId>
             <artifactId>shindig-social-api</artifactId>
             <version>2.5.2</version>
         </dependency>
 
-
+        <!-- Dépendances pour les tests unitaires -->
         <dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.11.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.11.0</version>
-			<scope>test</scope>
-		</dependency>
-        <!-- JUnit 5 (Jupiter) -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>5.11.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>5.11.0</version>
-			<scope>test</scope>
-		</dependency>
-
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.26.0</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>4.9.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <!-- Dépôt eXo pour récupérer les dépendances non présentes dans Maven Central -->
     <repositories>
         <repository>
             <id>exo-public</id>
@@ -158,84 +185,75 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>true</enabled> <!-- Activer pour versions milestone/snapshot comme 17-M02 -->
+                <enabled>true</enabled> <!-- Utile pour versions SNAPSHOT/Milestone -->
             </snapshots>
         </repository>
-
     </repositories>
 
-
+    <!-- Configuration de la phase de build -->
     <build>
         <finalName>exo-gadget-perso</finalName>
-		<pluginManagement>
-			<!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-			<plugins>
+        <pluginManagement>
+            <!-- Gestion des versions des plugins Maven -->
+            <plugins>
+                <!-- JaCoCo pour couverture de code -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.11</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>report</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
 
-				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.11</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>report</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-				<plugin>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.4.0</version>
-				</plugin>
-				<!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-				<plugin>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.3.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.13.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.2.5</version>
+                <!-- Plugin de compilation (Java 21 + Lombok) -->
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>21</source>
+                        <target>21</target>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>1.18.34</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Plugin pour exécuter les tests (JUnit 5) -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
                     <configuration>
                         <useModulePath>false</useModulePath>
                         <argLine>-XX:+EnableDynamicAgentLoading</argLine>
                     </configuration>
-				</plugin>
-				<plugin>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.4.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>3.1.2</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.1.2</version>
-				</plugin>
-				<!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-				<plugin>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.12.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.6.1</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+                </plugin>
 
+                <!-- Plugins standard pour clean, package et installation -->
+                <plugin><artifactId>maven-clean-plugin</artifactId><version>3.4.0</version></plugin>
+                <plugin><artifactId>maven-resources-plugin</artifactId><version>3.3.1</version></plugin>
+                <plugin><artifactId>maven-jar-plugin</artifactId><version>3.4.2</version></plugin>
+                <plugin><artifactId>maven-install-plugin</artifactId><version>3.1.2</version></plugin>
+                <plugin><artifactId>maven-deploy-plugin</artifactId><version>3.1.2</version></plugin>
+                <plugin><artifactId>maven-site-plugin</artifactId><version>3.12.1</version></plugin>
+                <plugin><artifactId>maven-project-info-reports-plugin</artifactId><version>3.6.1</version></plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
