@@ -15,8 +15,7 @@ export default {
   data() {
     return { temperature: '--' };
   },
-  async created() {
-  }
+ 
 };
 </script>
 

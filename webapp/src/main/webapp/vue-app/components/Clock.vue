@@ -1,39 +1,27 @@
 <template>
-  <div class="clock-card">
-    <div>{{ formattedDate }}</div>
-    <div>{{ formattedTime }}</div>
-  </div>
+  <div class="clock">{{ time }}</div>
 </template>
 
 <script>
 export default {
   name: 'Clock',
   data() {
-    return {
-      now: new Date()
-    };
+    return { time: new Date().toLocaleTimeString() };
   },
-  computed: {
-    formattedDate() {
-      return this.now.toLocaleDateString('fr-FR');
-    },
-    formattedTime() {
-      return this.now.toLocaleTimeString('fr-FR');
-    }
-  },
-  created() {
-    setInterval(() => {
-      this.now = new Date();
+  mounted() {
+    this.timer = setInterval(() => {
+      this.time = new Date().toLocaleTimeString();
     }, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.timer);
   }
 };
 </script>
 
 <style scoped>
-.clock-card {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
+.clock {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 </style>

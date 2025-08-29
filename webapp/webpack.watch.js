@@ -1,6 +1,6 @@
 const path = require('path');
 const {merge} = require('webpack-merge');
-const webpackCommonConfig = require('./webpack.prod.js');
+const webpackCommonConfig = require('./webpack.prod.cjs');
 
 // the display name of the war
 const app = 'webapp';
