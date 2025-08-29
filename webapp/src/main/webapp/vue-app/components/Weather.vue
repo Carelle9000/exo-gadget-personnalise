@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import api from '../services/api';
 
 export default {
   name: 'Weather',
@@ -17,7 +16,6 @@ export default {
     return { temperature: '--' };
   },
   async created() {
-    this.temperature = await api.getWeather(this.city);
   }
 };
 </script>

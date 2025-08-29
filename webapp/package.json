@@ -15,15 +15,17 @@
   },
   "license": "ISC",
   "author": "Carelle9000",
-  "type": "commonjs",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "npm run dev",
     "lint": "eslint --fix \"./src/main/webapp/vue-app/**\"",
     "eslint-check": "eslint  \"./src/main/webapp/vue-app/**\"",
-    "build": "webpack --config webpack.prod.js --mode production",    "start": "webpack serve --config webpack.watch.js --open",
+    "build": "webpack --config webpack.prod.cjs --mode production",
+    "start": "webpack serve --config webpack.watch.js --open",
     "dev": "webpack serve --config webpack.dev.js",
-    "watch": "webpack --config webpack.watch.js --progress --color --watch"  },
+    "watch": "webpack --config webpack.watch.js --progress --color --watch"
+  },
   "dependencies": {
     "vue": "^3.5.20"
   },

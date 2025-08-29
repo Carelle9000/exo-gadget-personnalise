@@ -16,6 +16,10 @@ const config = {
     filename: 'js/[name].bundle.js', // Ce nom sera référencé par eXo
     libraryTarget: 'amd'
   },
+   stats: {
+    all: true,      // affiche tout le détail du build
+    colors: true,   // couleur dans la console
+  },
   externals: {
     //vue: 'Vue',
     vuetify: 'Vuetify',
@@ -30,13 +34,19 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+         options: {
+            presets: ['@babel/preset-env']
+          }
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader']
       }
     ]
+  },
+   resolve: {
+    extensions: ['.js', '.vue']
   },
   plugins: [
       new ESLintPlugin({

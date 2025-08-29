@@ -1,26 +1,26 @@
 <template>
   <div class="dashboard-container">
     <div class="header">
-      <Welcome :user="user" />
+      <welcome :user="user" />
       <div class="header-right">
-        <Weather :city="city" />
-        <Clock />
+        <weather :city="city" />
+        <clock />
       </div>
     </div>
 
     <div class="content">
-      <Quote :quote="quote" />
-      <Docs :documents="documents" />
+      <quote :quote="quote" />
+      <docs :documents="documents" />
     </div>
   </div>
 </template>
 
 <script>
-import Welcome from './Welcome.vue';
-import Weather from './Weather.vue';
-import Clock from './Clock.vue';
-import Quote from './Quote.vue';
-import Docs from './Docs.vue';
+import welcome from './Welcome.vue';
+import weather from './Weather.vue';
+import clock from './Clock.vue';
+import quote from './Quote.vue';
+import docs from './Docs.vue';
 
 export default {
   name: 'App',
@@ -30,14 +30,10 @@ export default {
       user: { name: 'Thomas' }, // Peut être récupéré via eXo Platform
       city: 'Douala',
       quote: null,
-      documents: []
+      docs: []
     };
   },
-  async created() {
-    // Charger les données depuis les API
-   
-    
-  }
+  
 };
 </script>
 
