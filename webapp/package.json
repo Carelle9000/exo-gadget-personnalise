@@ -1,0 +1,50 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "frontend and configuration module",
+  "keywords": [
+    "myaccount2.0"
+  ],
+  "homepage": "https://github.com/Carelle9000/exo-gadget-personnalise#readme",
+  "bugs": {
+    "url": "https://github.com/Carelle9000/exo-gadget-personnalise/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carelle9000/exo-gadget-personnalise.git"
+  },
+  "license": "ISC",
+  "author": "Carelle9000",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "test": "npm run dev",
+    "lint": "eslint --fix \"./src/main/webapp/vue-app/**\"",
+    "eslint-check": "eslint  \"./src/main/webapp/vue-app/**\"",
+    "build": "webpack --config webpack.prod.js ",
+    "start": "webpack serve --config webpack.watch.js --open",
+    "watch": "webpack --config webpack.watch.js"
+  },
+  "dependencies": {
+    "vue": "^3.5.20"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.12.0",
+    "eslint-config-meedsio": "^1.0.4",
+    "eslint-plugin-vue": "^8.6.0",
+    "eslint-plugin-vuejs-accessibility": "^2.4.1",
+    "eslint-webpack-plugin": "^3.1.1",
+    "style-loader": "^4.0.0",
+    "vue": "^2.6.14",
+    "vue-loader": "^17.4.2",
+    "vue-template-compiler": "^2.7.16",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "webpack-merge": "^5.8.0"
+  }
+}
