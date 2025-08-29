@@ -49,6 +49,7 @@ public record GadgetController(WeatherService weatherService, QuoteService quote
         List<Document> documents = documentService.getRecentDocuments(currentUser);
 
         // Construire l'objet GadgetData
+        
         return new GadgetData(welcomeMessage, weather, quote, documents);
     }
 }
