@@ -3,11 +3,11 @@
                xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd"
                xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
     <component>
-        <key>org.exoplatform.alfresco.rest.api.GadgetData</key>  <!-- je dois mettre ici plutot l'implementation de mon gadget -->
-        <type>org.exoplatform.alfresco.rest.api.GadgetController</type>
+        <key>org.exo.gadget.rest.api.GadgetService</key>  <!-- je dois mettre ici plutot l'interface de mon gadget  à créer-->
+        <type>org.exo.gadget.rest.api.GadgetServiceImpl</type> <!-- je dois encore l'implémenter-->
     </component>
     <component>
-        <type>org.exoplatform.alfresco.rest.service.AlfrescoRestService</type>
+        <type>org.exo.gadget.rest.service.GadgetController</type> <!--il représente mon service rest-->
     </component>
 
     <import>war:/conf/custom-extension/bundle-configuration.xml</import>

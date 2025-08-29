@@ -3,19 +3,19 @@
                                       https://www.exoplatform.org/xml/ns/gatein_resources_1_4"
                   xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
     <portlet-skin>
-        <application-name>alfresco-extension-webapp</application-name>
-        <portlet-name>alfrescoPortlet</portlet-name>
+        <application-name>exo-gadget-personnalise</application-name>
+        <portlet-name>gadgetpersoPortlet</portlet-name>
         <skin-name>Community</skin-name>
-        <css-path>/css/alfrescoApp.css</css-path>
+        <css-path>/css/gadget.css</css-path>
     </portlet-skin>
 
     <portlet>
-        <name>alfrescoPortlet</name>
+        <name>gadgetpersoPortlet</name>
         <module>
-<!--            <script>-->
-<!--&lt;!&ndash;                <minify> false</minify>&ndash;&gt;-->
-<!--&lt;!&ndash;                <path>/dist/bundle.js</path>&ndash;&gt;-->
-<!--            </script>-->
+            <script>
+              <minify>false</minify>
+              <path>/js/gadgetperso.bundle.js</path>
+            </script>
             <depends>
                 <module>vue</module>
             </depends>
