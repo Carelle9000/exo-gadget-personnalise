@@ -1,18 +1,18 @@
 <template>
-  <div>
+  <div class="uiBox dashboard-container">
     <div v-if="loading" class="loader-container">
       <div class="loader"></div>
       <p>Chargement des données...</p>
     </div>
-    <div v-else class="dashboard-container">
-      <div class="header">
+    <div v-else>
+      <div class="uiHeader header">
         <welcome :user="user" />
         <div class="header-right">
           <weather :city="city" :temperature="weather.temperature" />
           <clock />
         </div>
       </div>
-      <div class="content">
+      <div class="uiGrid content">
         <quote :quote="quote" />
         <docs :documents="documents" />
       </div>
@@ -88,31 +88,35 @@ export default {
 
 <style scoped>
 .dashboard-container {
-  background: #f7f8fa;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 15px;
-  font-family: 'Roboto', sans-serif;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 24px;
+  font-family: "Open Sans", Arial, sans-serif;
+  margin: 24px auto;
+  max-width: 900px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #eaf3ff;
-  padding: 15px;
-  border-radius: 10px;
+  background: #f4f7fb;
+  padding: 18px 24px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e5e8ec;
 }
 
 .header-right {
   display: flex;
-  gap: 15px;
+  gap: 18px;
 }
 
 .content {
   display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
+  gap: 24px;
+  margin-top: 18px;
 }
 
 .loader-container {
@@ -120,17 +124,17 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  height: 250px;
 }
 
 .loader {
-  border: 6px solid #f3f3f3;
+  border: 6px solid #e5e8ec;
   border-top: 6px solid #2c9f45;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   animation: spin 1s linear infinite;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 @keyframes spin {

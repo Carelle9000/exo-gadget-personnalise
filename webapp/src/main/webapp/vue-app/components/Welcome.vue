@@ -17,9 +17,9 @@ export default {
 <style scoped>
 .welcome h2 {
   margin: 0;
-  color: #333;
+  color: #089aee;
 }
 .welcome p {
-  color: #555;
+  color: #fcf9f9;
 }
 </style>

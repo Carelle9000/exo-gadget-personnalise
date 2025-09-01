@@ -21,7 +21,7 @@ export default {
 
 <style scoped>
 .docs-card {
-  background: #f0f7ff;
+  background: #96c2d3;
   padding: 15px;
   border-radius: 8px;
   width: 35%;

@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
 .quote-card {
-  background: #fffbea;
+  background: #ecd298;
   padding: 15px;
   border-radius: 8px;
   width: 60%;
