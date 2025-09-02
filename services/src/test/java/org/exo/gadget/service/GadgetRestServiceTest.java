@@ -3,7 +3,7 @@ package org.exo.gadget.service;
 import org.exo.gadget.api.DocumentService;
 import org.exo.gadget.api.QuoteService;
 import org.exo.gadget.api.WeatherService;
-import org.exo.gadget.exposition.GadgetRestService;
+import org.exo.gadget.service.GadgetRestService;
 import org.exo.gadget.model.Document;
 import org.exo.gadget.model.Quote;
 import org.exo.gadget.model.WeatherData;
@@ -42,7 +42,7 @@ class GadgetRestServiceTest {
     @Mock
     private Identity identity;
 
-    private org.exo.gadget.exposition.GadgetRestService gadgetRestService;
+    private org.exo.gadget.service.GadgetRestService gadgetRestService;
 
     @BeforeEach
     void setUp() {

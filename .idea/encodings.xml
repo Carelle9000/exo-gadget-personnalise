@@ -5,8 +5,8 @@
     <file url="file://$PROJECT_DIR$/services/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/webapp/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/webapp/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/webapp/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/webapps/src/main/webapp" charset="UTF-8" />
   </component>
 </project>

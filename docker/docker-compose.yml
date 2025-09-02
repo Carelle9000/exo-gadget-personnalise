@@ -74,10 +74,8 @@ services:
     volumes:
       - exo_data:/srv/exo
       - exo_logs:/var/log/exo
-      - ./alfresco-extension-services.jar:/opt/exo/lib/alfresco-extension-services.jar
-      - ./alfresco-extension-webapp.war:/opt/exo/webapps/alfresco-extension-webapp.war
-      - ./webapp/target/webapp.war:/opt/exo/webapps/webapp.war
-      - .services/target/exo-gadget-perso.jar:opt/exo/services/exo-gadget-perso.jar
+      - ./webapp.war:/opt/exo/webapps/webapp.war
+      - ./exo-gadget-perso.jar:/opt/exo/lib/exo-gadget-perso.jar
     networks:
       - exo-net
 

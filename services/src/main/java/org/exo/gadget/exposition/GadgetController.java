@@ -12,31 +12,65 @@ import org.exoplatform.services.security.ConversationState;
 import java.util.List;
 
 /**
- * Contrôleur responsable de la composition des données du gadget.
+ * Implémentation du contrôleur {@link GadgetControllerService} responsable
+ * de la composition des données à afficher dans le gadget utilisateur.
+ *
  * <p>
- * Ce contrôleur récupère :
- * 1- Le message de bienvenue de l'utilisateur connecté
- * 2- La météo actuelle via WeatherService
- * 3- La citation du jour via QuoteService
- * 4- Les documents récents via DocumentService.
+ *  Ce contrôleur s'appuie sur trois services principaux pour collecter
+ *  les informations nécessaires :
+ *  <ul>
+ *     <li>{@link WeatherService} pour obtenir la météo actuelle</li>
+ *     <li>{@link QuoteService} pour fournir la citation du jour</li>
+ *     <li>{@link DocumentService} pour lister les documents récents
+ *         liés à l'utilisateur connecté</li>
+ *  </ul>
+ *  </p>
+ *
+ * <p>
+ * L'agrégation de ces informations est retournée sous la forme
+ * d'un objet {@link GadgetData}.
+ * </p>
+ *
+ * @author Ornella
+ * @version 1.0
  */
 public record GadgetController(WeatherService weatherService, QuoteService quoteService,
-                               DocumentService documentService) {
+                               DocumentService documentService) implements GadgetControllerService {
 
     /**
-     * Constructeur pour injection des services.
+     * Constructeur permettant l'injection des services nécessaires
+     * au fonctionnement du contrôleur.
+     *
+     * @param weatherService  Service de récupération des données météo
+     * @param quoteService    Service de récupération de la citation du jour
+     * @param documentService Service de récupération des documents récents
      */
     public GadgetController {
     }
 
     /**
-     * Construit et retourne un objet GadgetData pour l'utilisateur connecté.
+     * Construit et retourne un objet {@link GadgetData} contenant :
+     * <ul>
+     *     <li>Un message personnalisé pour l'utilisateur connecté</li>
+     *     <li>Les informations météorologiques actuelles</li>
+     *     <li>La citation du jour</li>
+     *     <li>Les documents récents associés à l'utilisateur</li>
+     * </ul>
      *
-     * @return GadgetData contenant toutes les informations à afficher
+     * <p>
+     * Le nom de l'utilisateur connecté est récupéré via
+     * {@link ConversationState#getCurrent()}.
+     * </p>
+     *
+     * @return un objet {@link GadgetData} regroupant toutes les informations
+     * nécessaires à l'affichage du gadget.
      */
+    @Override
     public GadgetData getGadgetData() {
-        // Récupérer l'utilisateur connecté pour personnaliser le message
+        // Récupérer l'identifiant de l'utilisateur connecté
         String currentUser = ConversationState.getCurrent().getIdentity().getUserId();
+
+        // Construire le message de bienvenue
         String welcomeMessage = "Bonjour " + currentUser + "!";
 
         // Récupérer les données météo
@@ -45,11 +79,10 @@ public record GadgetController(WeatherService weatherService, QuoteService quote
         // Récupérer la citation du jour
         Quote quote = quoteService.getDailyQuote();
 
-        // Récupérer les documents récents
+        // Récupérer la liste des documents récents
         List<Document> documents = documentService.getRecentDocuments(currentUser);
 
-        // Construire l'objet GadgetData
-        
+        // Retourner l'objet GadgetData complet
         return new GadgetData(welcomeMessage, weather, quote, documents);
     }
 }

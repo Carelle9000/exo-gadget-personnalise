@@ -26,7 +26,7 @@
     <!-- Déclaration des modules enfants qui héritent de ce POM -->
     <modules>
         <module>services</module> <!-- Module backend contenant la logique métier -->
-        <module>webapp</module>   <!-- Module web (interface utilisateur) -->
+        <module>webapps</module>   <!-- Module web (interface utilisateur) -->
     </modules>
 
     <!-- Informations supplémentaires -->

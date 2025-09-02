@@ -1,4 +1,4 @@
-package org.exo.gadget.exposition;
+package org.exo.gadget.service;
 
 import org.exo.gadget.api.DocumentService;
 import org.exo.gadget.api.QuoteService;

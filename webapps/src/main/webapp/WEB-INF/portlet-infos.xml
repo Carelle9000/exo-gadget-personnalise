@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <category name="gadget-exo">
+        <portlet>
+            <name>gadgetpersoPortlet</name>
+            <display-name>Gadget Personnalisé</display-name>
+        </portlet>
+    </category>
+</application>

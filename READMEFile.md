@@ -84,8 +84,10 @@ Type : JAR (logique backend).
 Dossiers :
 
 src/main/java/org/exo/gadget/api : Interfaces (WeatherService, QuoteService, DocumentService) et implémentations (WeatherServiceImpl, QuoteServiceImpl, DocumentServiceImpl).
+src/main/java/org/exo/gadget/client:  classes  responsables de l'appel HTTP à l'API Quotable et du parsing JSON.
 src/main/java/org/exo/gadget/model : POJOs (WeatherData, Quote, Document).
 src/main/java/org/exo/gadget/exposition : Controller REST (GadgetController).
+src/main/java/org/exo/gadget/service:Service REST pour exposer chaque API individuellement
 src/main/java/org/exo/gadget/util : Constantes (API keys, URLs).
 src/test/java : Tests unitaires (DocumentServiceImplTest, etc.) avec JUnit/Mockito.
 
@@ -95,7 +97,11 @@ Projet Parent 🏠 : exo-gadget-perso orchestre les modules via pom.xml. Dépend
 Services 🛠️ :
 
 api : Contient WeatherServiceImpl (météo), QuoteServiceImpl (citation), DocumentServiceImpl (documents via JCR ou API sociale).
+client: Contient QuoteApiClient et WeatherApiClient.
 model : Classes comme Document (titre, date), WeatherData (température, ville), Quote (texte, auteur).
+service: classe GadgetRestService
 exposition : GadgetController expose /rest/gadget/data pour le frontend.
 util : Clés API, URLs constantes.
+## Documentation
+La documentation Javadoc est générée dans `target/site/apidocs`. Consultez [ici](target/site/apidocs/index.html) après build.
 ```

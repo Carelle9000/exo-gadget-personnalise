@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="webapp" />
+        <module name="webapps" />
       </profile>
       <profile name="Annotation profile for exo-gadget-perso" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />

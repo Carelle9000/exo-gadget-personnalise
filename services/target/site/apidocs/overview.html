@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="dc.created" content="2025-09-02">
+    <meta name="description" content="Vue d'ensemble du gadget personnalisé pour eXo Platform">
+    <meta name="author" content="Jean Dupont (Stagiaire)">
+    <meta name="version" content="1.0">
+    <title>Vue d'ensemble - Gadget Personnalisé eXo Platform</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+    <link rel="stylesheet" type="text/css" href="script-dir/jquery-ui.min.css" title="Style">
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="script-dir/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
+</head>
+<body class="package-index-page">
+<script type="text/javascript">var pathtoroot = "./"; loadScripts(document, 'script');</script>
+<noscript>
+    <div>JavaScript is disabled on your browser.</div>
+</noscript>
+<div class="flex-box">
+    <header role="banner" class="flex-header">
+        <nav role="navigation">
+            <div class="top-nav" id="navbar-top">
+                <button id="navbar-toggle-button" aria-controls="navbar-top" aria-expanded="false" aria-label="Toggle navigation links"><span class="nav-bar-toggle-icon">&nbsp;</span><span class="nav-bar-toggle-icon">&nbsp;</span><span class="nav-bar-toggle-icon">&nbsp;</span></button>
+                <div class="skip-nav"><a href="#skip-navbar-top" title="Skip navigation links">Skip navigation links</a></div>
+                <ul id="navbar-top-firstrow" class="nav-list" title="Navigation">
+                    <li class="nav-bar-cell1-rev">Overview</li>
+                    <li><a href="index.html">Module services</a></li>
+                    <li><a href="index1.html">Module webapps</a></li>
+
+                </ul>
+            </div>
+            <div class="sub-nav">
+                <div id="navbar-sub-list"></div>
+                <div class="nav-list-search"><a href="search.html">SEARCH</a>
+                    <input type="text" id="search-input" disabled placeholder="Search">
+                    <input type="reset" id="reset-button" disabled value="reset">
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="flex-content">
+        <main role="main">
+            <div class="header">
+                <h1 class="title">Vue d'ensemble - Gadget Personnalisé eXo Platform</h1>
+            </div>
+            <div class="block">
+                <h2>Description générale du projet : Gadget Personnalisé pour Dashboard eXo Platform</h2>
+                <p>
+                    Ce projet de fin de stage vise à développer un gadget personnalisé pour l'interface dashboard de eXo Platform. Le gadget affiche :
+                <ul>
+                    <li>La date et l'heure actuelle.</li>
+                    <li>La météo en fonction de la position géographique de l'utilisateur (obtenue via géolocalisation et appel API backend).</li>
+                    <li>Les derniers documents traités par l'utilisateur (récupérés via APIs internes eXo).</li>
+                    <li>Une citation motivante par jour (via API externe proxyée en backend).</li>
+                    <li>Un message de bienvenue personnalisé basé sur l'utilisateur connecté.</li>
+                </ul>
+                L'objectif est d'améliorer l'expérience utilisateur et d'accroître la productivité en fournissant des informations pertinentes et motivantes directement sur le dashboard.
+                </p>
+                <p>
+                    Structure du projet : Multi-modulaire Maven avec un module service (JAR) pour le backend (appels API externes/internes) et un module webapp (WAR) pour le frontend (gadget OpenSocial avec HTML, CSS, Tailwind CSS). Tous les appels API sont gérés en backend pour respecter les normes de sécurité et d'intégration eXo.
+                </p>
+
+                <h2>Table des matières</h2>
+                <ul>
+                    <li><a href="#overview">1. Vue d'ensemble</a></li>
+                    <li><a href="#architecture">2. Architecture et Structure Multi-Modulaire</a></li>
+                    <li><a href="#installation">3. Installation et Configuration</a></li>
+                    <li><a href="#usage">4. Utilisation</a></li>
+                    <li><a href="#api">5. Référence de l'API Backend</a></li>
+                    <li><a href="#frontend">6. Implémentation Frontend</a></li>
+                    <li><a href="#examples">7. Exemples</a></li>
+                    <li><a href="#contributing">8. Contribution</a></li>
+                    <li><a href="#license">9. Licence</a></li>
+                </ul>
+
+                <h2 id="overview">1. Vue d'ensemble</h2>
+                <p>
+                    Ce gadget est basé sur la spécification OpenSocial supportée par eXo Platform. Il utilise un backend Java pour gérer les appels API (météo via OpenWeatherMap, citations via quotes.rest, documents via eXo REST APIs). Le frontend est un gadget OpenSocial XML avec contenu HTML/JS, stylisé avec Tailwind CSS pour une interface responsive et moderne.
+                </p>
+
+                <h2 id="architecture">2. Architecture et Structure Multi-Modulaire</h2>
+                <p>
+                    Le projet est structuré en Maven multi-modules :
+                <ul>
+                    <li><strong>Parent POM</strong> : Définit les dépendances communes (eXo kernel, OpenSocial, etc.) et les modules enfants.</li>
+                    <li><strong>Service Module (JAR)</strong> : Contient les services backend Java, REST endpoints (utilisant JAX-RS) pour proxyer les appels API externes et internes.</li>
+                    <li><strong>Webapp Module (WAR)</strong> : Contient le fichier gadget XML, ressources statiques (HTML, JS, CSS compilé Tailwind), et configuration pour déploiement dans eXo.</li>
+                </ul>
+                </p>
+
+                <h2 id="installation">3. Installation et Configuration</h2>
+                <p>
+                    Prérequis : JDK 21, Maven 4.0.0, eXo Platform installée via Docker.
+                <ul>
+                    <li>Clonez le repository : git clone "https://github.com/Carelle9000/exo-gadget-personnalise".</li>
+                    <li>Construisez : mvn clean install.</li>
+                    <li>Déployez le JAR service dans eXo.</li>
+                    <li>Déployez le WAR dans le serveur eXo.</li>
+                    <li>Ajoutez le gadget au dashboard via admin eXo.</li>
+                    <li>Configurez les clés API dans service/src/main/resources/config.properties.</li>
+                </ul>
+                </p>
+
+                <h2 id="usage">4. Utilisation</h2>
+                <p>
+                    Ajoutez le gadget à votre dashboard eXo. Le gadget chargera automatiquement les données via appels JS aux endpoints REST backend. La géolocalisation demande la permission utilisateur via navigator.geolocation.
+                </p>
+
+                <h2 id="api">5. Référence de l'API Backend</h2>
+                <p>
+                    Endpoints REST dans le module service :
+                <ul>
+                    <li><code>GET /rest/gadget/weather?lat={lat}&lon={lon}</code> : Récupère la météo.</li>
+                    <li><code>GET /rest/gadget/quote</code> : Récupère une citation.</li>
+                    <li><code>GET /rest/gadget/documents?userId={userId}</code> : Récupère les documents.</li>
+                </ul>
+                </p>
+
+                <h2 id="frontend">6. Implémentation Frontend</h2>
+                <p>
+                    Le gadget est défini dans webapp/src/main/webapp/gadget.xml avec HTML, JS, et Tailwind CSS pour une UI moderne.
+                </p>
+
+                <h2 id="examples">7. Exemples</h2>
+                <p>
+                    Exemple d'appel JS : <code>fetch('/rest/gadget/weather?lat=...&lon=...').then(...)</code>
+                </p>
+
+                <h2 id="contributing">8. Contribution</h2>
+                <p>
+                    Forkez le repo, créez une branche feature/, ajoutez tests, et soumettez une PR.
+                </p>
+
+                <h2 id="license">9. Licence</h2>
+                <p>
+                    Sous licence AGPL v3, compatible avec eXo Platform.
+                </p>
+            </div>
+            <h2>Auteur</h2>
+            <p>
+                Ce projet a été réalisé par <strong>Jean Dupont</strong> dans le cadre d'un stage. Contact : [votre-email@example.com]. Date de création : 2025-09-02.
+            </p>
+
+            <h2>Redirection vers le module service</h2>
+            <p>
+                Pour consulter la documentation de le module service, cliquez <a href="index.html">ici</a>.
+            </p>
+        </main>
+        <footer role="contentinfo">
+            <hr>
+            <p class="legal-copy"><small>Copyright &#169; 2003&#x2013;2025 <a href="http://www.exoplatform.com">eXo Platform SAS</a>. Projet personnalisé par Jean Dupont. Tous droits réservés.</small></p>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
