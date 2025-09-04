@@ -11,8 +11,14 @@ const exoServerPath = "/opt/exo";
 let config = merge(webpackCommonConfig, {
     mode: 'development',
   output: {
-    path: path.resolve(`${exoServerPath}/webapp/webapp`)
+  filename: 'exogadgettApp.bundle.js',
+  path: path.resolve(__dirname, 'dist')
+   },
+  devServer: {
+  headers: {
+    'Content-Security-Policy': "default-src 'none'; img-src * 'self' data: blob:;"
   },
+},
   devtool: 'inline-source-map'
 });
 

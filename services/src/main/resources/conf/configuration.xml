@@ -1,0 +1,14 @@
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+               xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
+
+    <external-component-plugins>
+        <target-component>org.exoplatform.container.PortalContainer</target-component>
+        <component-plugin>
+            <name>Gadget REST</name>
+            <set-method>addComponent</set-method>
+            <type>org.exo.gadget.service.GadgetRestService</type>
+        </component-plugin>
+    </external-component-plugins>
+
+</configuration>

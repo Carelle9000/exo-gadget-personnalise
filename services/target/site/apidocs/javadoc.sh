@@ -1,1 +1,0 @@
-/home/kozao/.jdks/graalvm-jdk-21.0.8/bin/javadoc @options @packages

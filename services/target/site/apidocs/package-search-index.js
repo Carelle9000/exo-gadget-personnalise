@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.exo.gadget.api"},{"l":"org.exo.gadget.client"},{"l":"org.exo.gadget.exposition"},{"l":"org.exo.gadget.model"},{"l":"org.exo.gadget.service"},{"l":"org.exo.gadget.util"}];updateSearchResults();

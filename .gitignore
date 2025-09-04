@@ -1,1 +1,15 @@
 node_modules
+services/target/exo-gadget-perso.jar
+services/.project
+services/.classpath
+services/.mvn
+services/.settings
+
+webapps/target/webapp.war
+webapps/.mvn
+webapps/.settings
+webapps/.classpath
+webapps/.project
+webapps/dist
+webapps/node_modules
+

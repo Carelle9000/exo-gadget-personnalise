@@ -14,7 +14,7 @@
         <module>
             <script>
               <minify>false</minify>
-              <path>/js/gadgetperso.bundle.js</path>
+              <path>/js/exogadgettApp.bundle.js</path>
             </script>
             <depends>
                 <module>vue</module>

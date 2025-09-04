@@ -8,6 +8,7 @@ org/exo/gadget/client/QuoteApiClient.class
 org/exo/gadget/model/WeatherData.class
 org/exo/gadget/api/QuoteServiceImpl.class
 org/exo/gadget/api/DocumentService.class
+org/exo/gadget/service/RestApplication.class
 org/exo/gadget/api/DocumentServiceImpl.class
 org/exo/gadget/util/Constants.class
 org/exo/gadget/api/WeatherServiceImpl.class
